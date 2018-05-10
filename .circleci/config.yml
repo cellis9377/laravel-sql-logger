@@ -5,24 +5,24 @@ jobs: # a collection of steps
     docker: # run the steps with Docker 
       #- image: circleci/php:latest # ...with this image as the primary container; this is where all `steps` will run
       - image: circleci/php:7.1-node-browsers
+
     working_directory: ~/laravel # directory where steps will run
 
     steps: # a set of executable commands
       - checkout # special step to check out source code to working directory
-      #- run: sudo apt install -y libsqlite3-dev zlib1g-dev
-      #- run: sudo docker-php-ext-install zip
 
-      - run: composer self-update
+      - run: sudo apt install -y mysql-client
+      - run: sudo apt install -y libsqlite3-dev zlib1g-dev
+      - run: sudo docker-php-ext-install zip
+
+      - run: sudo composer self-update
+
       - restore_cache:
-                keys:
-                  - composer-v1-{{ checksum "composer.json" }}
-                  - composer-v1-
-            - run: composer install -n --prefer-dist
-            - save_cache:
-                key: composer-v1-{{ checksum "composer.json" }}
-                paths:
-                  - vendor
-            - run: touch storage/testing.sqlite
-            - run: php artisan migrate --env=testing --database=sqlite_testing --force
-            - run: ./vendor/bin/codecept build
-            - run: ./vendor/bin/codecept run
+        keys:
+          - composer-v1-{{ checksum "composer.json" }}
+          - composer-v1-
+        - run: composer install -n --prefer-dist
+      - save_cache:
+          key: composer-v1-{{ checksum "composer.json" }}
+          paths:
+            - vendor
