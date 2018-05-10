@@ -7,7 +7,7 @@ jobs:
       #- image: circleci/php:7.1-node-browsers
 
       # Latest CentOS image
-      - image centos7
+      - image: centos7
     working_directory: ~/laravel # directory where steps will run
     steps: # a set of executable commands
       - checkout # special step to check out source code to working directory
