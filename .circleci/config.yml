@@ -29,10 +29,10 @@ jobs:
       - run: sudo apt install -y libsqlite3-dev zlib1g-dev
       - run: sudo docker-php-ext-install zip
       - run: sudo composer self-update
-      - run: composer install --dev --ignore-platform-reqs
+      - run: composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader
 
       # run composer update, ignoring dev requires
-      - run: composer update --no-dev --ignore-platform-reqs
+      - run: composer update --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader
 
       # install mysql client on first container
       - run: sudo apt install -y mysql-client
