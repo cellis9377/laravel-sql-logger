@@ -3,34 +3,27 @@ version: 2 # use CircleCI 2.0
 jobs:
   build:
     docker:
-      # Ubuntu 14.14
-      #- image: circleci/php:7.1-node-browsers
+      - image: circleci/php:7.1-node-browsers
+        environment:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_DB: homestead
+          MYSQL_USER: homestead
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_PASSWORD:
+      - image: mysql:5.7
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
+        environment:
+          MYSQL_USER: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
 
-      # Latest CentOS image
-      - image: centos/centos7
-
-      #- image: amazonlinux:latest
     working_directory: ~/laravel # directory where steps will run
     steps: # a set of executable commands
       - checkout # special step to check out source code to working directory
 
-      - run: curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
+      - run: sudo apt-get update
 
-      - run: yum -y update
-      - run: yum install -y bzip2-devel gcc gcc-c++ git openssl-devel
-      - run: yum -y clean all
-
-      - run: yum -y install php71
-      - run: yum -y install iputils
-
-      - run: sudo curl -sS https://getcomposer.org/installer | sudo php
-      - run: sudo mv composer.phar /usr/local/bin/composer
-      - run: sudo ln -s /usr/local/bin/composer /usr/bin/composer
-
-      - run: sudo composer install
-
-      #- run: sudo apt-get update
-      #- run: sudo docker-php-ext-install zip
+      - run: sudo apt install -y libsqlite3-dev zlib1g-dev
+      - run: sudo docker-php-ext-install zip
 
       - restore_cache:
           keys:
@@ -41,7 +34,3 @@ jobs:
           key: composer-v1-{{ checksum "composer.json" }}
           paths:
             - vendor
-      - run: touch storage/testing.sqlite
-      - run: php artisan migrate --env=testing --database=sqlite_testing --force
-      - run: ./vendor/bin/codecept build
-      - run: ./vendor/bin/codecept run
