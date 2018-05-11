@@ -41,8 +41,7 @@ jobs:
           keys:
             - composer-v1-{{ checksum "composer.json" }}
             - composer-v1-
-      #- run: composer install -n --prefer-dist
-      - run: composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader
+      - run: composer install -n --no-dev --prefer-dist
 
       - save_cache:
           key: composer-v1-{{ checksum "composer.json" }}
