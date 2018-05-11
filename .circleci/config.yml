@@ -31,6 +31,9 @@ jobs:
       - run: sudo composer self-update
       - run: composer install --dev --ignore-platform-reqs
 
+      # run composer update, ignoring dev requires
+      - run: composer update --no-dev --ignore-platform-reqs
+
       # install mysql client on first container
       - run: sudo apt install -y mysql-client
 
